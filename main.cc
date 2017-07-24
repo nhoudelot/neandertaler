@@ -47,9 +47,9 @@ void akti(void);    //  Idle callback
 void nappi(unsigned char b,int x,int y);    //  Keyboard callback
 
 void updatetimer(void); //  Updates the currentTime, row and pattern
-void loadfile(char *name,void *dest); // Simply loads a file
+void loadfile(const char *name,void *dest); // Simply loads a file
 
-main(int argc,char *argv[])
+int main(int argc,char *argv[])
 {
     // First, let's load the pictures
     loadfile("data/font.raw",font_raw);
@@ -72,8 +72,8 @@ main(int argc,char *argv[])
     MikMod_RegisterAllDrivers();
     MikMod_RegisterLoader(&load_xm);
     md_mixfreq=44100;
-    MikMod_Init("");
-    piisi=Player_Load("data/far_away.xm",12,0);
+    MikMod_Init((char *) "");
+    piisi=Player_Load((char *) "data/far_away.xm",12,0);
     Player_SetVolume(100);
     Player_Start(piisi);
 #endif
@@ -184,7 +184,7 @@ void updatetimer(void)
     currentTime=long(aeka);
 }
 
-void loadfile(char *name,void *dest)
+void loadfile(const char *name,void *dest)
 {
     FILE    *f;
 

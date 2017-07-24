@@ -570,7 +570,7 @@ extern unsigned char slider3_raw[64*64];
 extern unsigned char slider4_raw[64*64];
 extern unsigned char slider5_raw[64*64];
 
-char *letters = "abcdefghijklmnopqrstuvxyz";
+const char *letters = "abcdefghijklmnopqrstuvxyz";
 int font_num_chars = 25;
 int font_pos[25*2] = {6,22,25,39,41,55,57,72,74,88,89,102,104,120,122,138,141,152,153,165,166,183,186,197,200,222,224,241,243,259,259,276,278,293,298,309,311,325,329,338,341,356,360,374,375,392,394,410,413,427};
 
@@ -607,7 +607,7 @@ void loadRAW32(unsigned char *memseg, int width, int height, int id) {
     glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, memseg);
 }
 
-void putstring(char *str, unsigned char *dest, int posx, int posy, int destwidth, int destheight) {
+void putstring(const char *str, unsigned char *dest, int posx, int posy, int destwidth, int destheight) {
 	int i=0;
 	int pos=posx;
 
