@@ -10,7 +10,8 @@
 #include <GL/glu.h>
 
 #ifdef SOUND
-#include <mikmod.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 #endif
 
 #include <signal.h>
@@ -60,8 +61,6 @@ int main(int argc,char *argv[])
     loadfile("data/slider5.raw",slider5_raw);
 
 #ifdef SOUND
-    MODULE  *piisi;
-
     /*  Load the module and set up sound.
         Partially from some intro by Smoke/ECFH. */
 
@@ -69,13 +68,25 @@ int main(int argc,char *argv[])
     setenv("MM_FRAGSIZE","16",0);    // Smaller latency, smoother demo
 #endif
 
-    MikMod_RegisterAllDrivers();
-    MikMod_RegisterLoader(&load_xm);
-    md_mixfreq=44100;
-    MikMod_Init((char *) "");
-    piisi=Player_Load((char *) "data/far_away.xm",12,0);
-    Player_SetVolume(100);
-    Player_Start(piisi);
+    // start SDL with audio support
+    if(SDL_Init(SDL_INIT_AUDIO)==-1) {
+        printf("SDL_Init: %s\n", SDL_GetError());
+        exit(1);
+    }
+    // open 44.1KHz, signed 16bit, system byte order,
+    //      stereo audio, using 1024 byte chunks
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
+    {
+        printf("%s", Mix_GetError());
+        exit(1);
+    }
+    Mix_Music *musique;
+    if(!(musique = Mix_LoadMUS("data/far_away.xm"))) {
+        fprintf(stderr, "failed to load far_away.xm:\n");
+        exit(1);
+    }
+
+    Mix_PlayMusic(musique,1);
 #endif
 
     //  Initialize GLUT
@@ -111,15 +122,6 @@ int main(int argc,char *argv[])
 
     //  Initialize the demo engine
     init();
-
-#ifdef SOUND
-    //  A child process will play the music
-    if(!(child=fork()))
-    {
-        while(1)
-            MikMod_Update();
-    }
-#endif
 
     //  Here we go! GLUT eventloop
     glutMainLoop();
