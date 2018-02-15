@@ -52,6 +52,11 @@ void loadfile(const char *name,void *dest); // Simply loads a file
 
 int main(int argc,char *argv[])
 {
+    char datapath[]="/usr/share/neandertaler/";
+    if (chdir(datapath) == 0) {
+    }else{
+         printf("Error : Could not change directory to %s\n",datapath);
+    }
     // First, let's load the pictures
     loadfile("data/font.raw",font_raw);
     loadfile("data/slider1.raw",slider1_raw);
